@@ -4,36 +4,26 @@ import React, { useState, useEffect } from "react";
 const keys = "abcdefghijklmnopqrstuvwxyz0123456789 ".split("");
 
 const App = () => {
-  const [text, setText] = useState("");
-  const [quote, setQuote] = useState("");
+  const [input,setInput] = useState("");
+  const [quote,setQuote] = useState("");
 
-  useEffect(() => {
-    fetch("https://api.quotable.io/random")
-      .then((res) => res.json())
-      .then((data) => {
-        setQuote(data.content);
-      });
-  }, []);
-
-  const handleClick = (e) => {
-    let s = new String(text);
-    s += e.target.name;
-    setText(s);
-  };
+  useEffect(()=>{
+    if (input === "forty two") {
+      fetch("https://api.quotable.io/random")
+      .then(res=>res.json())
+      .then(data=>setQuote(data.content))
+    }else{
+      setQuote("");
+    }
+  },[input])
 
   return (
     <div className="keyboard">
-      {text != "forty two" && <div className="preview">{text}</div>}
-      {text == "forty two" && <div className="quote">{quote}</div>}
-
+      <div className="preview">{input}</div>
+      {!!quote && <div className="quote">{quote}</div>}
       <div>
         {keys.map((key) => (
-          <button
-            name={key}
-            onClick={handleClick}
-            key={key}
-            id={key === " " ? `key-space` : `key-${key}`}
-          >
+          <button key={key} id={key === " " ? `key-space` : `key-${key}`} onClick={()=>{setInput(prev=>prev + key)}}>
             {key === " " ? "Space" : key.toUpperCase()}
           </button>
         ))}
